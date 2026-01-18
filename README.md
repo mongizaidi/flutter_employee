@@ -3,7 +3,7 @@
 A Small Flutter MVVM application for managing employee records with full CRUD functionality and Optimistic UI.
 API: https://dummy.restapiexample.com/
 
-![App Screenshot](screenshots/home.jpg)
+<img src="screenshots/home.jpg" alt="App Screenshot" width="300">
 
 ## Features
 
@@ -57,7 +57,7 @@ lib/
 1. **Clone the repository**
    ```bash
    git clone <repo-url>
-   cd car_cutter_app
+   cd flutter_employee
    ```
 
 2. **Install dependencies**
