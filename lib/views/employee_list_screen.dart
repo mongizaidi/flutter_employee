@@ -7,16 +7,16 @@ import 'employee_form_screen.dart';
 
 class EmployeeListScreen extends StatefulWidget {
   const EmployeeListScreen({super.key});
-  
+
   @override
   State<EmployeeListScreen> createState() => _EmployeeListScreenState();
 }
 
 class _EmployeeListScreenState extends State<EmployeeListScreen> {
-
   @override
   void initState() {
     super.initState();
+
     // Load employees when the screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<EmployeeViewModel>(context, listen: false).loadEmployees();
@@ -32,34 +32,48 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              Provider.of<EmployeeViewModel>(context, listen: false).loadEmployees();
+              Provider.of<EmployeeViewModel>(
+                context,
+                listen: false,
+              ).loadEmployees();
             },
           ),
         ],
       ),
       body: Consumer<EmployeeViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isLoading) {
+        builder: (context, controller, child) {
+          if (controller.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (viewModel.error != null) {
-            return ErrorView(message: viewModel.error!, onRetry: viewModel.loadEmployees);
+          if (controller.loadError != null) {
+            return ErrorView(
+              message: controller.loadError!,
+              onRetry: controller.loadEmployees,
+            );
           }
 
-          if (viewModel.employees.isEmpty) {
+          if (controller.employees.isEmpty) {
             return const Center(child: Text('No employees found.'));
           }
 
           return ListView.separated(
-            itemCount: viewModel.employees.length,
-            separatorBuilder: (_, __) => const Divider(),
+            itemCount: controller.employees.length,
+            separatorBuilder: (context, index) => const Divider(),
             itemBuilder: (context, index) {
-              final employee = viewModel.employees[index];
+              final employee = controller.employees[index];
               return ListTile(
                 leading: CircleAvatar(
-                  child: Text(employee.employeeName.isNotEmpty 
-                      ? employee.employeeName[0] : '?'),
+                  backgroundImage: employee.profileImage.isNotEmpty
+                      ? NetworkImage(employee.profileImage)
+                      : null,
+                  child: employee.profileImage.isEmpty
+                      ? Text(
+                          employee.employeeName.isNotEmpty
+                              ? employee.employeeName[0]
+                              : '?',
+                        )
+                      : null,
                 ),
                 title: Text(employee.employeeName),
                 subtitle: Text('Age: ${employee.employeeAge}'),
@@ -75,8 +89,9 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
               );
             },
           );
-        }
+        },
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

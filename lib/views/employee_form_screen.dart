@@ -21,11 +21,15 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.employee?.employeeName ?? '');
+    _nameController = TextEditingController(
+      text: widget.employee?.employeeName ?? '',
+    );
     _salaryController = TextEditingController(
-        text: widget.employee != null ? widget.employee!.employeeSalary.toString() : '');
+      text: widget.employee != null ? widget.employee!.employeeSalary : '',
+    );
     _ageController = TextEditingController(
-        text: widget.employee != null ? widget.employee!.employeeAge.toString() : '');
+      text: widget.employee != null ? widget.employee!.employeeAge : '',
+    );
   }
 
   @override
@@ -36,20 +40,20 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
     super.dispose();
   }
 
-  Future<void> _submitForm() async {
+  void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final viewModel = Provider.of<EmployeeViewModel>(context, listen: false);
 
       if (widget.employee == null) {
-        // Create
-        await viewModel.addEmployee(
+        // Create - Optimistic
+        viewModel.addEmployee(
           _nameController.text,
           _salaryController.text,
           _ageController.text,
         );
       } else {
-        // Update
-        await viewModel.updateEmployee(
+        // Update - Optimistic
+        viewModel.updateEmployee(
           widget.employee!.id,
           _nameController.text,
           _salaryController.text,
@@ -57,24 +61,17 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
         );
       }
 
-      if (mounted && viewModel.error == null) {
-        Navigator.pop(context); // Go back on success
-      } else if (mounted) {
-         ScaffoldMessenger.of(context).showSnackBar(
-           SnackBar(content: Text('Error: ${viewModel.error}')),
-         );
-      }
+      // Pop immediately for Optimistic UI
+      // The Success/Error feedback will be handled by snackbars in the parent screen
+      Navigator.pop(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     final isEditing = widget.employee != null;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Edit Employee' : 'New Employee'),
-      ),
+      appBar: AppBar(title: Text(isEditing ? 'Edit Employee' : 'New Employee')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -140,7 +137,9 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
                     ),
                     child: viewModel.isLoading
                         ? const CircularProgressIndicator()
-                        : Text(isEditing ? 'Update Employee' : 'Create Employee'),
+                        : Text(
+                            isEditing ? 'Update Employee' : 'Create Employee',
+                          ),
                   );
                 },
               ),

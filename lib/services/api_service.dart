@@ -65,7 +65,9 @@ class ApiService {
           throw Exception(body['message'] ?? 'Failed to load employees');
         }
       } else {
-        throw Exception(_getErrorMessage(response.statusCode, context: 'Employees'));
+        throw Exception(
+          _getErrorMessage(response.statusCode, context: 'Employees'),
+        );
       }
     } catch (e) {
       throw Exception(_handleException(e));
@@ -85,7 +87,9 @@ class ApiService {
           throw Exception('Employee details not available');
         }
       } else {
-        throw Exception(_getErrorMessage(response.statusCode, context: 'Employee'));
+        throw Exception(
+          _getErrorMessage(response.statusCode, context: 'Employee'),
+        );
       }
     } catch (e) {
       throw Exception(_handleException(e));
@@ -107,13 +111,15 @@ class ApiService {
         }
         throw Exception(body['message'] ?? 'Failed to create employee');
       } else {
-        throw Exception(_getErrorMessage(response.statusCode, context: 'Create employee'));
+        throw Exception(
+          _getErrorMessage(response.statusCode, context: 'Create employee'),
+        );
       }
     } catch (e) {
       throw Exception(_handleException(e));
     }
   }
-  
+
   // PUT: update existing employee by ID
   Future<void> updateEmployee(int id, Map<String, dynamic> data) async {
     try {
@@ -123,7 +129,9 @@ class ApiService {
       );
 
       if (response.statusCode != 200) {
-        throw Exception(_getErrorMessage(response.statusCode, context: 'Update employee'));
+        throw Exception(
+          _getErrorMessage(response.statusCode, context: 'Update employee'),
+        );
       }
     } catch (e) {
       throw Exception(_handleException(e));
@@ -136,7 +144,9 @@ class ApiService {
       final response = await http.delete(Uri.parse('$baseUrl/delete/$id'));
 
       if (response.statusCode != 200) {
-        throw Exception(_getErrorMessage(response.statusCode, context: 'Delete employee'));
+        throw Exception(
+          _getErrorMessage(response.statusCode, context: 'Delete employee'),
+        );
       }
     } catch (e) {
       throw Exception(_handleException(e));

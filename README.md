@@ -13,7 +13,8 @@ API: https://dummy.restapiexample.com/
 - **Update** - Edit existing employee information
 - **Delete** - Remove an existing employee with confirmation
 - **Optimistic UI** - Instant feedback, rollback on failure
-- **Error Handling** - Centralised error handling with retry
+- **Error Management** - Proper error handling for CRUD operations - snackbar style non blocking the main UI with retry and close actions
+- **Success messages** clear feedback in case of success
 
 ## Architecture
 
