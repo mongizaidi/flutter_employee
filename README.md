@@ -3,7 +3,19 @@
 A Small Flutter MVVM application for managing employee records with full CRUD functionality and Optimistic UI.
 API: https://dummy.restapiexample.com/
 
-<img src="screenshots/home.jpg" alt="App Screenshot" width="300">
+## Screenshots
+
+| Employee List | Employee Details | Delete Confirmation |
+| :---: | :---: | :---: |
+| <img src="screenshots/employee_list.png" width="200"> | <img src="screenshots/employee_details.png" width="200"> | <img src="screenshots/delete_confirmation.png" width="200"> |
+
+| Add Employee | Edit Employee | Error View - Blocking |
+| :---: | :---: | :---: |
+| <img src="screenshots/add_employee.png" width="200"> | <img src="screenshots/edit_employee.png" width="200"> | <img src="screenshots/error_view.png" width="200"> |
+
+| Success Feedback | Error Feedback - Non Blocking |
+| :---: | :---: |
+| <img src="screenshots/update_success_snackbar.png" width="200"> | <img src="screenshots/update_failed_snackbar.png" width="200"> |
 
 ## Features
 
@@ -21,9 +33,9 @@ All CRUD operations use Optimistic UI for instant feedback:
 - **Delete**: Remove instantly → Restore on failure
 ### 4. Error and Success Handling
 - **API Level**: Map HTTP status codes to user-friendly messages.
-- **Application Level**: Distinction between "hard" errors (loading failure) and "soft" errors (CRUD failure). Hard errors use a specialized `ErrorView` with retry, while soft errors use Snackbars.
+- **Application Level**: Distinction between "hard" errors (loading failure) and "soft" errors (CRUD failure). Hard errors use a specialized `ErrorView` with retry, while soft errors use `CrudStatusSnackBar` with retry and dismiss actions.
 
-- **Success messages**: Clear, non UI blocking feedback in case of success - snackbar style
+- **Success messages**: Clear, non UI blocking feedback in case of success - via `CrudStatusSnackBar`.
 
 ## Architecture
 
@@ -36,11 +48,14 @@ lib/
 ├── viewmodels/
 │   └── employee_view_model.dart  # Business logic & state
 └── views/
+    ├── helpers/
+    │   └── feedback_helper.dart  # UI Feedback controller
+    ├── widgets/
+    │   ├── crud_status_snackbar.dart # Custom SnackBar widget
+    │   └── error_view.dart    # Reusable error component
     ├── employee_list_screen.dart
     ├── employee_detail_screen.dart
-    ├── employee_form_screen.dart
-    └── widgets/
-        └── error_view.dart    # Reusable error component
+    └── employee_form_screen.dart
 ```
 
 ## Tech Stack
