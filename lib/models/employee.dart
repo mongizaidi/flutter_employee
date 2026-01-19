@@ -1,8 +1,18 @@
+import 'package:hive/hive.dart';
+
+part 'employee.g.dart';
+
+@HiveType(typeId: 0)
 class Employee {
+  @HiveField(0)
   final int id;
+  @HiveField(1)
   final String employeeName;
+  @HiveField(2)
   final String employeeSalary;
+  @HiveField(3)
   final String employeeAge;
+  @HiveField(4)
   final String profileImage;
 
   Employee({

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/employee.dart';
 import '../services/api_service.dart';
+import '../services/local_database_service.dart';
 
 /// Result class for CRUD operations
 class CrudResult {
@@ -18,6 +19,7 @@ class CrudResult {
 
 class EmployeeViewModel with ChangeNotifier {
   final ApiService _apiService = ApiService();
+  final LocalDatabaseService _localDb = LocalDatabaseService();
 
   List<Employee> _employees = [];
   bool _isLoading = false;
@@ -36,9 +38,20 @@ class EmployeeViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
+      // 1. Try to fetch from API
       _employees = await _apiService.fetchEmployees();
+      // 2. SUCCESS: Sync local cache
+      await _localDb.saveEmployees(_employees);
     } catch (e) {
-      _loadError = e.toString();
+      // 3. FAILURE: Try to load from local cache
+      final cached = _localDb.getCachedEmployees();
+      if (cached.isNotEmpty) {
+        _employees = cached;
+        // Optionally notify the user they are viewing cached data
+        debugPrint('Viewing cached data due to error: $e');
+      } else {
+        _loadError = e.toString();
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -87,6 +100,8 @@ class EmployeeViewModel with ChangeNotifier {
           employeeAge: age,
           profileImage: "",
         );
+        // Sync with local cache
+        await _localDb.addEmployee(_employees[index]);
         notifyListeners();
       }
 
@@ -137,6 +152,9 @@ class EmployeeViewModel with ChangeNotifier {
       final data = {"name": name, "salary": salary, "age": age};
       await _apiService.updateEmployee(id, data);
 
+      // Sync with local cache
+      await _localDb.updateEmployee(updated);
+
       onCrudResult?.call(
         CrudResult.success('Success', 'Employee updated successfully'),
       );
@@ -168,6 +186,9 @@ class EmployeeViewModel with ChangeNotifier {
     // 3. Send API request in background
     try {
       await _apiService.deleteEmployee(id);
+
+      // Sync with local cache
+      await _localDb.deleteEmployee(id);
 
       onCrudResult?.call(
         CrudResult.success('Success', 'Employee deleted successfully'),

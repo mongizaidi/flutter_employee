@@ -4,7 +4,22 @@ import 'viewmodels/employee_view_model.dart';
 import 'views/employee_list_screen.dart';
 import 'views/helpers/feedback_helper.dart';
 
-void main() {
+import 'package:hive_flutter/hive_flutter.dart';
+import 'models/employee.dart';
+import 'services/local_database_service.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Hive
+  await Hive.initFlutter();
+
+  // Register Hive Adapters
+  Hive.registerAdapter(EmployeeAdapter());
+
+  // Initialize Local Database Boxes
+  await LocalDatabaseService.init();
+
   runApp(const MainApp());
 }
 

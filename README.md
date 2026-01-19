@@ -31,7 +31,12 @@ All CRUD operations use Optimistic UI for instant feedback:
 - **Create**: Add immediately with temp ID → Replace with real ID on success
 - **Update**: Apply changes instantly → Rollback on failure
 - **Delete**: Remove instantly → Restore on failure
-### 4. Error and Success Handling
+### 4. Offline Support (Hive)
+- **Local Caching**: The application automatically caches the employee list using **Hive** local storage.
+- **Deep Sync**: Create, Update, and Delete operations are atomically synced with the local box upon server success, ensuring local data is always current.
+- **Graceful Fallback**: If the server is unreachable, the app seamlessly falls back to the local cache.
+
+### 5. Error and Success Handling
 - **API Level**: Map HTTP status codes to user-friendly messages.
 - **Application Level**: Distinction between "hard" errors (loading failure) and "soft" errors (CRUD failure). Hard errors use a specialized `ErrorView` with retry, while soft errors use `CrudStatusSnackBar` with retry and dismiss actions.
 
@@ -42,17 +47,18 @@ All CRUD operations use Optimistic UI for instant feedback:
 ```
 lib/
 ├── models/
-│   └── employee.dart          # Data model
+│   └── employee.dart            # Data model (Hive annotated)
 ├── services/
-│   └── api_service.dart       # API communication
+│   ├── api_service.dart         # API communication
+│   └── local_database_service.dart # Hive caching logic
 ├── viewmodels/
-│   └── employee_view_model.dart  # Business logic & state
+│   └── employee_view_model.dart    # Business logic & state
 └── views/
     ├── helpers/
-    │   └── feedback_helper.dart  # UI Feedback controller
+    │   └── feedback_helper.dart    # UI Feedback controller
     ├── widgets/
     │   ├── crud_status_snackbar.dart # Custom SnackBar widget
-    │   └── error_view.dart    # Reusable error component
+    │   └── error_view.dart      # Reusable error component
     ├── employee_list_screen.dart
     ├── employee_detail_screen.dart
     └── employee_form_screen.dart
@@ -65,6 +71,7 @@ lib/
 | Framework | Flutter 3.10+ |
 | State Management | Provider + ChangeNotifier |
 | Architecture | MVVM |
+| Local Database | **Hive** |
 | HTTP Client | http package |
 
 ## Getting Started
@@ -73,9 +80,10 @@ lib/
 
 - VSCode: 1.108.0
 - Flutter SDK 3.10.7+
-- cupertino_icons: ^1.0.8
-- http: ^1.6.0
+- hive: ^2.2.3
+- hive_flutter: ^1.1.0
 - provider: ^6.1.5
+- http: ^1.6.0
 
 ### Setup
 
