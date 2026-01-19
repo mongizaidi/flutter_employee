@@ -7,14 +7,23 @@ API: https://dummy.restapiexample.com/
 
 ## Features
 
+### 1. Pages
 - **Employee List** - View all employees with refresh button
 - **Employee Details** - View detailed information
+### 2. Actions
 - **Create** - Add a new employee
 - **Update** - Edit existing employee information
 - **Delete** - Remove an existing employee with confirmation
-- **Optimistic UI** - Instant feedback, rollback on failure
-- **Error Management** - Proper error handling for CRUD operations - snackbar style non blocking the main UI with retry and close actions
-- **Success messages** clear feedback in case of success
+### 3. Optimistic UI
+All CRUD operations use Optimistic UI for instant feedback:
+- **Create**: Add immediately with temp ID → Replace with real ID on success
+- **Update**: Apply changes instantly → Rollback on failure
+- **Delete**: Remove instantly → Restore on failure
+### 4. Error and Success Handling
+- **API Level**: Map HTTP status codes to user-friendly messages.
+- **Application Level**: Distinction between "hard" errors (loading failure) and "soft" errors (CRUD failure). Hard errors use a specialized `ErrorView` with retry, while soft errors use Snackbars.
+
+- **Success messages**: Clear, non UI blocking feedback in case of success - snackbar style
 
 ## Architecture
 
@@ -70,11 +79,3 @@ lib/
    ```bash
    flutter run
    ```
-
-## Optimistic UI
-
-All CRUD operations use Optimistic UI for instant feedback:
-
-1. **Create**: Add immediately with temp ID → Replace with real ID on success
-2. **Update**: Apply changes instantly → Rollback on failure
-3. **Delete**: Remove instantly → Restore on failure

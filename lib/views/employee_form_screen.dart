@@ -88,6 +88,12 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a name';
                   }
+                  if (value.trim().length < 2) {
+                    return 'Name must be at least 2 characters';
+                  }
+                  if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+                    return 'Name can only contain letters and spaces';
+                  }
                   return null;
                 },
               ),
@@ -103,8 +109,15 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a salary';
                   }
-                  if (int.tryParse(value) == null) {
+                  final salary = int.tryParse(value);
+                  if (salary == null) {
                     return 'Please enter a valid number';
+                  }
+                  if (salary < 1) {
+                    return 'Salary must be at least 1';
+                  }
+                  if (salary > 1000000) {
+                    return 'Salary cannot exceed 1,000,000';
                   }
                   return null;
                 },
@@ -121,8 +134,15 @@ class _EmployeeFormScreenState extends State<EmployeeFormScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an age';
                   }
-                  if (int.tryParse(value) == null) {
+                  final age = int.tryParse(value);
+                  if (age == null) {
                     return 'Please enter a valid number';
+                  }
+                  if (age < 18) {
+                    return 'Employee must be at least 18 years old';
+                  }
+                  if (age > 100) {
+                    return 'Age cannot exceed 100';
                   }
                   return null;
                 },
