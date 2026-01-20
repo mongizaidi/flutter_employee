@@ -20,7 +20,7 @@ API: https://dummy.restapiexample.com/
 ## Features
 
 ### 1. Pages
-- **Employee List** - View all employees with refresh button
+- **Employee List** - View all employees with refresh button and pull to refresh on mobile
 - **Employee Details** - View detailed information
 ### 2. Actions
 - **Create** - Add a new employee
